@@ -1,15 +1,15 @@
 import { useEffect, useRef, useCallback } from 'react';
 import NetInfo from '@react-native-community/netinfo';
 import * as Notifications from 'expo-notifications';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
-import { setOnlineStatus, selectIsOnline } from '@store/slices/offlineQueueSlice';
-import { loggedOut, selectIsAuthenticated, selectUserRole } from '@store/slices/authSlice';
-import { fetchUserProfile, fetchFarmerProfile } from '@store/slices/userSlice';
-import { addNotification } from '@store/slices/notificationSlice';
-import { authApi } from '@services/api/auth.api';
-import { notificationApi } from '@services/index';
-import { getPendingSyncActions, removeSyncAction, incrementRetryCount } from '@services/local/database';
-import { UserRole } from '@ekatale/types';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { setOnlineStatus, selectIsOnline } from '../store/slices/offlineQueueSlice';
+import { loggedOut, selectIsAuthenticated, selectUserRole } from '../store/slices/authSlice';
+import { fetchUserProfile, fetchFarmerProfile } from '../store/slices/userSlice';
+import { addNotification } from '../store/slices/notificationSlice';
+import { authApi } from '../services/api/auth.api';
+import { notificationApi } from '../services';
+import { getPendingSyncActions, removeSyncAction, incrementRetryCount } from '../services/local/database';
+import { UserRole } from '../types';
 
 // ─────────────────────────────────────────────
 // useNetworkStatus
@@ -158,7 +158,7 @@ export function useTransportTracking(jobId: string | null) {
 
     const poll = async () => {
       try {
-        const { transportApi } = await import('@services/index');
+        const { transportApi } = await import('../services');
         const loc = await transportApi.getDriverLocation(jobId);
         locationRef.current = { lat: loc.lat, lng: loc.lng };
       } catch {

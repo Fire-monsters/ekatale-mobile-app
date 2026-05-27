@@ -6,13 +6,13 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { AuthStackParams } from '@navigation/RootNavigator';
-import { Colors, Font, Space, Layout, Atoms } from '@theme/index';
-import { useAppDispatch } from '@store/hooks';
-import { loginSuccess, persistTokens } from '@store/slices/authSlice';
-import { fetchUserProfile, fetchFarmerProfile } from '@store/slices/userSlice';
-import { authApi } from '@services/api/auth.api';
-import { UserRole } from '@ekatale/types';
+import type { AuthStackParams } from '../../navigation/RootNavigator';
+import { Colors, Font, Space, Layout, Atoms } from '../../../theme';
+import { useAppDispatch } from '../../store/hooks';
+import { loginSuccess, persistTokens } from '../../store/slices/authSlice';
+import { fetchUserProfile, fetchFarmerProfile } from '../../store/slices/userSlice';
+import { authApi } from '../../services/api/auth.api';
+import { UserRole } from '../../types';
 
 type Nav = NativeStackNavigationProp<AuthStackParams>;
 type Route = RouteProp<AuthStackParams, 'OTPVerify'>;

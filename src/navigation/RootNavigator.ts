@@ -21,3 +21,7 @@ export type FarmerStackParams = {
   Notifications: undefined;
   FarmerProfile: undefined;
 };
+
+export type RootStackParamList = AuthStackParams & FarmerStackParams;
+
+export {};

@@ -1,6 +1,6 @@
-import { get, post, patch, del } from '../client';
-import { API_ROUTES } from '@constants/index';
-import type { ProduceListing, PriceGuidance, Payment, TransportJob } from '@ekatale/types';
+import { get, post, patch, del } from './client';
+import { API_ROUTES } from '../constants';
+import type { ProduceListing, PriceGuidance, Payment, TransportJob } from '../types';
 
 // ─────────────────────────────────────────────
 // LISTING API

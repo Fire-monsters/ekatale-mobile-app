@@ -6,13 +6,13 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { AuthStackParams } from '@navigation/RootNavigator';
-import { Colors, Font, Space, Layout, getCropEmoji } from '@theme/index';
-import { useAppDispatch } from '@store/hooks';
-import { fetchUserProfile, fetchFarmerProfile } from '@store/slices/userSlice';
-import { getCurrentLocation } from '@utils/permissions';
-import { authApi } from '@services/api/auth.api';
-import { DISTRICTS_MVP } from '@constants/index';
+import type { AuthStackParams } from '../navigation/RootNavigator';
+import { Colors, Font, Space, Layout, getCropEmoji } from '../../theme';
+import { useAppDispatch } from '../store/hooks';
+import { fetchUserProfile, fetchFarmerProfile } from '../store/slices/userSlice';
+import { getCurrentLocation } from '../utils/permissions';
+import { authApi } from '../services/api/auth.api';
+import { DISTRICTS_MVP } from '../constants';
 
 type Nav = NativeStackNavigationProp<AuthStackParams>;
 

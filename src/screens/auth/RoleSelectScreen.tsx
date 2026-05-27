@@ -1,3 +1,3 @@
-import PhoneEntryScreen from '@screens/PhoneEntryScreen';
+import PhoneEntryScreen from '../PhoneEntryScreen';
 
 export default PhoneEntryScreen;

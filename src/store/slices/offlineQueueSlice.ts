@@ -52,3 +52,5 @@ export default offlineQueueSlice.reducer;
 
 export const selectIsOnline = (state: { offlineQueue: OfflineQueueState }) =>
   state.offlineQueue.isOnline;
+
+export {};

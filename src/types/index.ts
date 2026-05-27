@@ -19,6 +19,20 @@ export interface User {
   language: Language;
 }
 
+export interface FarmerProfile {
+  userId?: string;
+  fullName?: string;
+  nin?: string;
+  district?: string;
+  village?: string;
+  farmSizeAcres?: number;
+  crops?: string[];
+  paymentProvider?: 'MTN_MOMO' | 'AIRTEL_MONEY';
+  paymentNumber?: string;
+  gpsLat?: number;
+  gpsLng?: number;
+}
+
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;

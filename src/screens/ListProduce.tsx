@@ -6,11 +6,11 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { FarmerStackParams } from '@navigation/RootNavigator';
-import { Colors, Font, Space, Layout, getCropEmoji } from '@theme/index';
-import { useAppDispatch } from '@store/hooks';
-import { startDraft, updateDraft } from '@store/slices/listingSlice';
-import type { ProduceUnit, ProduceGrade } from '@ekatale/types';
+import type { FarmerStackParams } from '../navigation/RootNavigator';
+import { Colors, Font, Space, Layout, getCropEmoji } from '../../theme';
+import { useAppDispatch } from '../store/hooks';
+import { startDraft, updateDraft } from '../store/slices/listingSlice';
+import type { ProduceUnit, ProduceGrade } from '../types';
 
 type Nav = NativeStackNavigationProp<FarmerStackParams>;
 
@@ -233,7 +233,9 @@ const s = StyleSheet.create({
     gap: Space.lg,
     backgroundColor: Colors.surface,
   },
-  back: { alignSelf: 'flex-start', paddingVertical: Space.sm },
+  back: {
+    alignSelf: 'flex-start',
+    paddingVertical: Space.sm },
   backText: { fontSize: Font.size.body, color: Colors.green, fontWeight: Font.weight.medium },
   title: { fontSize: Font.size.heading, fontWeight: Font.weight.bold, color: Colors.textPrimary },
 

@@ -9,8 +9,8 @@ import {
   Text,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { selectIsOnline } from '@store/slices/offlineQueueSlice';
-import { useAppSelector } from '@store/hooks';
+import { selectIsOnline } from '../store/slices/offlineQueueSlice';
+import { useAppSelector } from '../store/hooks';
 
 interface SafeScreenProps {
   children: React.ReactNode;

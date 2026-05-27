@@ -1,6 +1,6 @@
 import { get, post } from './client';
-import { API_ROUTES } from '@constants/index';
-import type { AuthTokens, User } from '@ekatale/types';
+import { API_ROUTES } from '../constants';
+import type { AuthTokens, User } from '../types';
 
 export interface RequestOtpPayload {
   phone: string;

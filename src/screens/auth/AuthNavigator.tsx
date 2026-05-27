@@ -1,15 +1,15 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import type { AuthStackParams } from '@navigation/RootNavigator';
+import type { AuthStackParams } from '../../navigation/RootNavigator';
 
 const Stack = createNativeStackNavigator<AuthStackParams>();
 
-const SplashScreen = React.lazy(() => import('@screens/SplashScreen'));
-const LanguageScreen = React.lazy(() => import('@screens/auth/LanguageScreen'));
-const PhoneEntryScreen = React.lazy(() => import('@screens/PhoneEntryScreen'));
-const OTPVerifyScreen = React.lazy(() => import('@screens/auth/OTPVerifyScreen'));
-const FarmerRegisterScreen = React.lazy(() => import('@screens/FarmerRegisterScreen'));
-const RoleSelectScreen = React.lazy(() => import('@screens/auth/RoleSelectScreen'));
+const SplashScreen = React.lazy(() => import('../SplashScreen'));
+const LanguageScreen = React.lazy(() => import('./LanguageScreen'));
+const PhoneEntryScreen = React.lazy(() => import('../PhoneEntryScreen'));
+const OTPVerifyScreen = React.lazy(() => import('./OTPVerifyScreen'));
+const FarmerRegisterScreen = React.lazy(() => import('../FarmerRegisterScreen'));
+const RoleSelectScreen = React.lazy(() => import('./RoleSelectScreen'));
 
 export function AuthNavigator() {
   return (

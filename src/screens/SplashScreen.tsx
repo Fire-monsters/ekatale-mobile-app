@@ -10,11 +10,10 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { AuthStackParams } from '@navigation/RootNavigator';
-import { Colors, Font, Space, Layout } from '@theme/index';
-import { useAppDispatch, useAppSelector } from '@store/hooks';
-import { setLanguagePreference } from '@store/slices/userSlice';
-import { selectLanguage } from '@store/slices/userSlice';
+import type { AuthStackParams } from '../navigation/RootNavigator';
+import { Colors, Font, Space, Layout } from '../../theme';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { setLanguagePreference, selectLanguage } from '../store/slices/userSlice';
 
 type Nav = NativeStackNavigationProp<AuthStackParams>;
 
