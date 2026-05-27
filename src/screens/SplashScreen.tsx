@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useRef } from 'react';
 import {
   View,
@@ -6,7 +7,6 @@ import {
   Animated,
   TouchableOpacity,
   StatusBar,
-  Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -46,7 +46,7 @@ export default function SplashScreen() {
         Animated.spring(slideUp, { toValue: 0, useNativeDriver: true, tension: 60, friction: 8 }),
       ]),
     ]).start();
-  }, []);
+  }, [cardOpacity, logoOpacity, logoScale, slideUp]);
 
   return (
     <View style={styles.root}>
