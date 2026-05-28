@@ -1,4 +1,4 @@
-package com.ekatale_app
+package com.anonymous.ekatale_app
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

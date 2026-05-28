@@ -1,4 +1,4 @@
-package com.ekatale_app
+package com.anonymous.ekatale_app
 
 import android.app.Application
 import com.facebook.react.PackageList

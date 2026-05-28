@@ -1,0 +1,20 @@
+{"_e":"root:init","_t":1779901032352,"format":"v0-jsonl","version":"56.1.12"}
+{"_e":"env:mode","_t":1779901032354,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1779901032363,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1779901033065,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1779901033989,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:instantiate","_t":1779901079382,"atlas":false,"workers":6,"host":"::","port":8081}
+{"_e":"metro:client_log","_t":1779902341576,"level":"error","data":["Project is incompatible with this version of Expo Go\n\nThis project requires a newer version of Expo Go.\n\nHow to fix this error:\nDownload the latest version of Expo Go from the Play Store."]}
+{"_e":"metro:client_log","_t":1779942268831,"level":"error","data":["Project is incompatible with this version of Expo Go\n\nThis project requires a newer version of Expo Go.\n\nHow to fix this error:\nDownload the latest version of Expo Go from the Play Store."]}
+{"_e":"root:init","_t":1779943271258,"format":"v0-jsonl","version":"56.1.12"}
+{"_e":"env:mode","_t":1779943271260,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1779943271268,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1779943419348,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1779943420212,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:instantiate","_t":1779943460945,"atlas":false,"workers":6,"host":"::","port":8082}
+{"_e":"root:init","_t":1779946491829,"format":"v0-jsonl","version":"56.1.12"}
+{"_e":"env:mode","_t":1779946491831,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1779946491839,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1779946492982,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1779946493861,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:instantiate","_t":1779946540552,"atlas":false,"workers":6,"host":"::","port":8081}
