@@ -9,6 +9,9 @@ interface AuthState {
   user: User | null;
   tokens: AuthTokens | null;
   isAuthenticated: boolean;
+  // Holds verified user+tokens for new users who haven't completed their profile yet.
+  // isAuthenticated stays false until FarmerRegister is done.
+  pendingRegistration: { user: User; tokens: AuthTokens } | null;
 }
 
 const initialState: AuthState = {
@@ -16,6 +19,7 @@ const initialState: AuthState = {
   user: null,
   tokens: null,
   isAuthenticated: false,
+  pendingRegistration: null,
 };
 
 export const persistTokens = createAsyncThunk(
@@ -37,11 +41,28 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.tokens = action.payload.tokens;
       state.isAuthenticated = true;
+      state.pendingRegistration = null;
+    },
+    // Called after OTP for a brand-new user who still needs to complete their profile.
+    // Keeps isAuthenticated false so the app stays on the auth stack (FarmerRegister screen).
+    registrationPending(state, action: PayloadAction<{ user: User; tokens: AuthTokens }>) {
+      state.pendingRegistration = action.payload;
+    },
+    // Called by FarmerRegisterScreen after the profile API call succeeds.
+    // Promotes the pending credentials to a full authenticated session.
+    registrationComplete(state) {
+      if (state.pendingRegistration) {
+        state.user = state.pendingRegistration.user;
+        state.tokens = state.pendingRegistration.tokens;
+        state.isAuthenticated = true;
+        state.pendingRegistration = null;
+      }
     },
     loggedOut(state) {
       state.user = null;
       state.tokens = null;
       state.isAuthenticated = false;
+      state.pendingRegistration = null;
     },
   },
   extraReducers: (builder) => {
@@ -51,9 +72,16 @@ const authSlice = createSlice({
   },
 });
 
-export const { otpRequested, loginSuccess, loggedOut } = authSlice.actions;
+export const {
+  otpRequested,
+  loginSuccess,
+  registrationPending,
+  registrationComplete,
+  loggedOut,
+} = authSlice.actions;
 
 export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
+export const selectPendingRegistration = (state: RootState) => state.auth.pendingRegistration;
 export const selectUserRole = (state: RootState) =>
   state.auth.user?.role ?? state.user.currentUser?.role;
 

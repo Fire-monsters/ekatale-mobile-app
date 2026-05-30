@@ -7,7 +7,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { FarmerStackParams } from '../navigation/RootNavigator';
-import { Colors, Font, Space, Layout, getCropEmoji } from '../../theme';
+import { GS, Colors, Font, Space, Layout, getCropEmoji } from '@styles/global';
 import { useAppDispatch } from '../store/hooks';
 import { startDraft, updateDraft } from '../store/slices/listingSlice';
 import type { ProduceUnit, ProduceGrade } from '../types';
@@ -42,11 +42,11 @@ const GRADES: { value: ProduceGrade; stars: string; label: string; desc: string 
 
 function ProgressBar({ step }: { step: number }) {
   return (
-    <View style={s.progress}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
       {[1, 2, 3].map(n => (
-        <View key={n} style={[s.progressDot, step >= n && s.progressDotActive]} />
+        <View key={n} style={[GS.progressDot, step >= n && GS.progressDotActive]} />
       ))}
-      <Text style={s.progressText}>Step 1 of 3</Text>
+      <Text style={GS.progressText}>Step 1 of 3</Text>
     </View>
   );
 }
@@ -91,16 +91,16 @@ export default function ListProduce() {
       keyboardShouldPersistTaps="handled"
     >
       {/* Header */}
-      <TouchableOpacity style={s.back} onPress={() => navigation.goBack()}>
-        <Text style={s.backText}>← Back</Text>
+      <TouchableOpacity style={GS.back} onPress={() => navigation.goBack()}>
+        <Text style={GS.backText}>← Back</Text>
       </TouchableOpacity>
-      <Text style={s.title}>List New Produce</Text>
+      <Text style={GS.screenTitle}>List New Produce</Text>
       <ProgressBar step={1} />
 
       {/* 1. Crop type */}
       <View style={s.section}>
         <Text style={s.sectionLabel}>
-          What are you selling? <Text style={s.required}>*</Text>
+          What are you selling? <Text style={GS.required}>*</Text>
         </Text>
         <View style={s.cropsGrid}>
           {CROPS.map(c => {
@@ -119,13 +119,13 @@ export default function ListProduce() {
             );
           })}
         </View>
-        {errors.crop ? <Text style={s.err}>⚠ {errors.crop}</Text> : null}
+        {errors.crop ? <Text style={GS.fieldError}>⚠ {errors.crop}</Text> : null}
       </View>
 
       {/* 2. Quantity */}
       <View style={s.section}>
         <Text style={s.sectionLabel}>
-          How much do you have? <Text style={s.required}>*</Text>
+          How much do you have? <Text style={GS.required}>*</Text>
         </Text>
 
         {/* Unit selector */}
@@ -134,10 +134,10 @@ export default function ListProduce() {
             {UNITS.map(u => (
               <TouchableOpacity
                 key={u.value}
-                style={[s.unitChip, unit === u.value && s.unitChipActive]}
+                style={[GS.chipSquare, unit === u.value && GS.chipSquareActive]}
                 onPress={() => setUnit(u.value)}
               >
-                <Text style={[s.unitChipText, unit === u.value && s.unitChipTextActive]}>
+                <Text style={[GS.chipSquareText, unit === u.value && GS.chipSquareTextActive]}>
                   {u.label}
                 </Text>
               </TouchableOpacity>
@@ -177,13 +177,13 @@ export default function ListProduce() {
             </TouchableOpacity>
           ))}
         </View>
-        {errors.qty ? <Text style={s.err}>⚠ {errors.qty}</Text> : null}
+        {errors.qty ? <Text style={GS.fieldError}>⚠ {errors.qty}</Text> : null}
       </View>
 
       {/* 3. Grade */}
       <View style={s.section}>
         <Text style={s.sectionLabel}>Quality Grade</Text>
-        <Text style={s.sectionHint}>Warehouse will confirm grade on arrival — choose your best guess</Text>
+        <Text style={GS.fieldHint}>Warehouse will confirm grade on arrival — choose your best guess</Text>
         <View style={s.gradeRow}>
           {GRADES.map(g => (
             <TouchableOpacity
@@ -233,23 +233,8 @@ const s = StyleSheet.create({
     gap: Space.lg,
     backgroundColor: Colors.surface,
   },
-  back: {
-    alignSelf: 'flex-start',
-    paddingVertical: Space.sm },
-  backText: { fontSize: Font.size.body, color: Colors.green, fontWeight: Font.weight.medium },
-  title: { fontSize: Font.size.heading, fontWeight: Font.weight.bold, color: Colors.textPrimary },
-
-  progress: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  progressDot: { width: 32, height: 5, borderRadius: 3, backgroundColor: '#E5E7EB' },
-  progressDotActive: { backgroundColor: Colors.green },
-  progressText: { fontSize: Font.size.caption, color: Colors.textMuted, marginLeft: 4 },
-
   section: { gap: 12 },
   sectionLabel: { fontSize: Font.size.body, fontWeight: Font.weight.bold, color: Colors.textPrimary },
-  sectionHint: { fontSize: Font.size.caption, color: Colors.textMuted, marginTop: -6 },
-  required: { color: Colors.error },
-  err: { fontSize: Font.size.label, color: Colors.error },
-
   // Crops grid
   cropsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   cropTile: {
@@ -263,15 +248,8 @@ const s = StyleSheet.create({
   cropLabel: { fontSize: 14, fontWeight: Font.weight.semiBold, color: Colors.textSecondary },
   cropLabelActive: { color: Colors.textInverse },
 
-  // Units
+  // Units row (horizontal scroll container)
   unitRow: { flexDirection: 'row', gap: 8 },
-  unitChip: {
-    paddingHorizontal: 16, paddingVertical: 10, borderRadius: Layout.radius.md,
-    backgroundColor: Colors.bg, borderWidth: 1.5, borderColor: '#E5E7EB',
-  },
-  unitChipActive: { backgroundColor: Colors.green, borderColor: Colors.green },
-  unitChipText: { fontSize: 14, fontWeight: Font.weight.medium, color: Colors.textMuted },
-  unitChipTextActive: { color: Colors.textInverse },
 
   // Quantity stepper
   qtyRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },

@@ -15,7 +15,8 @@
       "@constants/*": ["src/constants/*"],
       "@theme/*": ["theme/*"],
       "@utils/*": ["src/utils/*"],
-      "@ekatale/types": ["src/types/index.ts"]
+      "@ekatale/types": ["src/types/index.ts"],
+      "@styles/*": ["src/styles/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

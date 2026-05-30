@@ -2,16 +2,16 @@
 import React, { useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity,
-  ScrollView, TextInput, Alert,
+  ScrollView, TextInput,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { AuthStackParams } from '../navigation/RootNavigator';
-import { Colors, Font, Space, Layout, getCropEmoji } from '../../theme';
+import { GS, Colors, Font, Space, Layout, getCropEmoji } from '@styles/global';
 import { useAppDispatch } from '../store/hooks';
-import { fetchUserProfile, fetchFarmerProfile } from '../store/slices/userSlice';
+import { loginSuccess } from '../store/slices/authSlice';
 import { getCurrentLocation } from '../utils/permissions';
-import { authApi } from '../services/api/auth.api';
 import { DISTRICTS_MVP } from '../constants';
 
 type Nav = NativeStackNavigationProp<AuthStackParams>;
@@ -26,13 +26,13 @@ const CROPS = [
 
 function StepBar({ step }: { step: number }) {
   return (
-    <View style={s.stepBar}>
+    <View style={GS.stepBar}>
       {[1, 2].map(n => (
         <React.Fragment key={n}>
-          <View style={[s.stepCircle, step >= n && s.stepCircleActive]}>
-            <Text style={[s.stepNum, step >= n && s.stepNumActive]}>{n}</Text>
+          <View style={[GS.stepCircle, step >= n && GS.stepCircleActive]}>
+            <Text style={[GS.stepNum, step >= n && GS.stepNumActive]}>{n}</Text>
           </View>
-          {n < 2 && <View style={[s.stepLine, step >= 2 && s.stepLineActive]} />}
+          {n < 2 && <View style={[GS.stepLine, step >= 2 && GS.stepLineActive]} />}
         </React.Fragment>
       ))}
       <Text style={s.stepLabel}>Step {step} of 2</Text>
@@ -42,7 +42,7 @@ function StepBar({ step }: { step: number }) {
 
 function FieldLabel({ label, required }: { label: string; required?: boolean }) {
   return (
-    <Text style={s.fieldLabel}>
+    <Text style={GS.fieldLabel}>
       {label}
       {required && <Text style={{ color: Colors.error }}> *</Text>}
     </Text>
@@ -97,28 +97,13 @@ export default function FarmerRegisterScreen() {
     setGpsLoading(false);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!validateStep2()) return;
-    setLoading(true);
-    try {
-      await authApi.registerFarmer({
-        fullName: fullName.trim(),
-        nin: nin.trim(),
-        district,
-        farmSizeAcres: parseFloat(farmSize),
-        crops,
-        paymentProvider: payProvider,
-        paymentNumber: payNumber.replace(/\D/g, ''),
-        gpsLat: gps?.lat,
-        gpsLng: gps?.lng,
-      });
-      await dispatch(fetchUserProfile());
-      await dispatch(fetchFarmerProfile());
-    } catch (e: any) {
-      Alert.alert('Registration failed', e.response?.data?.message ?? 'Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    // Static flow: skip API call, go straight to the farmer dashboard.
+    dispatch(loginSuccess({
+      user: { id: 'static', phone: '', role: 'FARMER' as any, language: 'en' },
+      tokens: { accessToken: 'static', refreshToken: '' },
+    }));
   };
 
   return (
@@ -129,23 +114,23 @@ export default function FarmerRegisterScreen() {
       showsVerticalScrollIndicator={false}
     >
       <TouchableOpacity
-        style={s.back}
+        style={GS.back}
         onPress={() => step > 1 ? setStep(1) : navigation.goBack()}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
-        <Text style={s.backText}>← {step > 1 ? 'Back' : 'Cancel'}</Text>
+        <Text style={GS.backText}>← {step > 1 ? 'Back' : 'Cancel'}</Text>
       </TouchableOpacity>
 
-      <Text style={s.title}>Create Farmer Account</Text>
+      <Text style={GS.screenTitle}>Create Farmer Account</Text>
       <StepBar step={step} />
 
       {step === 1 ? (
-        <View style={s.form}>
+        <View style={GS.form}>
           {/* Full name */}
-          <View style={s.field}>
+          <View style={GS.field}>
             <FieldLabel label="Full Name" required />
             <TextInput
-              style={[s.input, errors.fullName && s.inputError]}
+              style={[GS.input, errors.fullName && GS.inputError]}
               value={fullName}
               onChangeText={v => { setFullName(v); setErrors(e => ({...e, fullName: ''})); }}
               placeholder="e.g. Amina Nakato"
@@ -153,44 +138,44 @@ export default function FarmerRegisterScreen() {
               returnKeyType="next"
               autoCapitalize="words"
             />
-            {errors.fullName ? <Text style={s.err}>{errors.fullName}</Text> : null}
+            {errors.fullName ? <Text style={GS.fieldError}>{errors.fullName}</Text> : null}
           </View>
 
           {/* NIN */}
-          <View style={s.field}>
+          <View style={GS.field}>
             <FieldLabel label="National ID Number (NIN)" required />
             <TextInput
-              style={[s.input, errors.nin && s.inputError]}
+              style={[GS.input, errors.nin && GS.inputError]}
               value={nin}
               onChangeText={v => { setNin(v.toUpperCase()); setErrors(e => ({...e, nin: ''})); }}
               placeholder="CM92010050CXKJ"
               placeholderTextColor={Colors.textDisabled}
               autoCapitalize="characters"
             />
-            {errors.nin ? <Text style={s.err}>{errors.nin}</Text> : null}
+            {errors.nin ? <Text style={GS.fieldError}>{errors.nin}</Text> : null}
           </View>
 
           {/* District */}
-          <View style={s.field}>
+          <View style={GS.field}>
             <FieldLabel label="Your District" required />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={s.chipRow}>
+              <View style={GS.chipRow}>
                 {DISTRICTS_MVP.slice(0, 10).map(d => (
                   <TouchableOpacity
                     key={d}
-                    style={[s.chip, district === d && s.chipActive]}
+                    style={[GS.chip, district === d && GS.chipActive]}
                     onPress={() => { setDistrict(d); setErrors(e => ({...e, district: ''})); }}
                   >
-                    <Text style={[s.chipText, district === d && s.chipTextActive]}>{d}</Text>
+                    <Text style={[GS.chipText, district === d && GS.chipTextActive]}>{d}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </ScrollView>
-            {errors.district ? <Text style={s.err}>{errors.district}</Text> : null}
+            {errors.district ? <Text style={GS.fieldError}>{errors.district}</Text> : null}
           </View>
 
           {/* Farm size */}
-          <View style={s.field}>
+          <View style={GS.field}>
             <FieldLabel label="Farm Size (acres)" required />
             <View style={s.sizeRow}>
               <TouchableOpacity
@@ -200,7 +185,7 @@ export default function FarmerRegisterScreen() {
                 <Text style={s.sizeBtnText}>−</Text>
               </TouchableOpacity>
               <TextInput
-                style={[s.sizeInput, errors.farmSize && s.inputError]}
+                style={[s.sizeInput, errors.farmSize && GS.inputError]}
                 value={farmSize}
                 onChangeText={v => { setFarmSize(v); setErrors(e => ({...e, farmSize: ''})); }}
                 keyboardType="decimal-pad"
@@ -216,11 +201,11 @@ export default function FarmerRegisterScreen() {
               </TouchableOpacity>
               <Text style={s.sizeUnit}>acres</Text>
             </View>
-            {errors.farmSize ? <Text style={s.err}>{errors.farmSize}</Text> : null}
+            {errors.farmSize ? <Text style={GS.fieldError}>{errors.farmSize}</Text> : null}
           </View>
 
           {/* GPS */}
-          <View style={s.field}>
+          <View style={GS.field}>
             <FieldLabel label="Farm Location (GPS)" />
             <TouchableOpacity
               style={[s.gpsBtn, gps && s.gpsBtnActive]}
@@ -235,7 +220,7 @@ export default function FarmerRegisterScreen() {
                 <View style={s.gpsDot} />
               )}
             </TouchableOpacity>
-            <Text style={s.fieldHint}>Helps match you with nearby buyers</Text>
+            <Text style={GS.fieldHint}>Helps match you with nearby buyers</Text>
           </View>
 
           <TouchableOpacity
@@ -246,11 +231,11 @@ export default function FarmerRegisterScreen() {
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={s.form}>
+        <View style={GS.form}>
           {/* Crops */}
-          <View style={s.field}>
+          <View style={GS.field}>
             <FieldLabel label="Crops You Grow" required />
-            <Text style={s.fieldHint}>Select all that apply</Text>
+            <Text style={GS.fieldHint}>Select all that apply</Text>
             <View style={s.cropsGrid}>
               {CROPS.map(c => (
                 <TouchableOpacity
@@ -265,11 +250,11 @@ export default function FarmerRegisterScreen() {
                 </TouchableOpacity>
               ))}
             </View>
-            {errors.crops ? <Text style={s.err}>{errors.crops}</Text> : null}
+            {errors.crops ? <Text style={GS.fieldError}>{errors.crops}</Text> : null}
           </View>
 
           {/* Mobile Money */}
-          <View style={s.field}>
+          <View style={GS.field}>
             <FieldLabel label="Mobile Money Provider" required />
             <View style={s.payRow}>
               {([
@@ -293,10 +278,10 @@ export default function FarmerRegisterScreen() {
             </View>
           </View>
 
-          <View style={s.field}>
+          <View style={GS.field}>
             <FieldLabel label="Mobile Money Number" required />
             <TextInput
-              style={[s.input, errors.payNumber && s.inputError]}
+              style={[GS.input, errors.payNumber && GS.inputError]}
               value={payNumber}
               onChangeText={v => { setPayNumber(v); setErrors(e => ({...e, payNumber: ''})); }}
               placeholder="0770 000 000"
@@ -304,8 +289,8 @@ export default function FarmerRegisterScreen() {
               keyboardType="phone-pad"
             />
             {errors.payNumber
-              ? <Text style={s.err}>{errors.payNumber}</Text>
-              : <Text style={s.fieldHint}>Payments will be sent to this number</Text>
+              ? <Text style={GS.fieldError}>{errors.payNumber}</Text>
+              : <Text style={GS.fieldHint}>Payments will be sent to this number</Text>
             }
           </View>
 
@@ -339,44 +324,7 @@ const s = StyleSheet.create({
     gap: Space.md,
     backgroundColor: Colors.surface,
   },
-  back: { alignSelf: 'flex-start', paddingVertical: Space.sm },
-  backText: { fontSize: Font.size.body, color: Colors.green, fontWeight: Font.weight.medium },
-  title: { fontSize: Font.size.heading, fontWeight: Font.weight.bold, color: Colors.textPrimary },
-
-  // Step bar
-  stepBar: { flexDirection: 'row', alignItems: 'center', gap: 0, paddingVertical: 4 },
-  stepCircle: {
-    width: 32, height: 32, borderRadius: 16,
-    backgroundColor: '#E5E7EB', alignItems: 'center', justifyContent: 'center',
-  },
-  stepCircleActive: { backgroundColor: Colors.green },
-  stepNum: { fontSize: Font.size.label, fontWeight: Font.weight.bold, color: Colors.textMuted },
-  stepNumActive: { color: Colors.textInverse },
-  stepLine: { flex: 1, height: 3, backgroundColor: '#E5E7EB', marginHorizontal: 4 },
-  stepLineActive: { backgroundColor: Colors.green },
   stepLabel: { fontSize: Font.size.caption, color: Colors.textMuted, marginLeft: 8 },
-
-  form: { gap: Space.md },
-  field: { gap: 6 },
-  fieldLabel: { fontSize: Font.size.label, fontWeight: Font.weight.semiBold, color: Colors.textSecondary },
-  fieldHint: { fontSize: Font.size.caption, color: Colors.textMuted },
-  err: { fontSize: Font.size.caption, color: Colors.error },
-
-  input: {
-    borderWidth: 2, borderColor: '#E5E7EB', borderRadius: Layout.radius.md,
-    padding: 14, fontSize: Font.size.body, color: Colors.textPrimary,
-    minHeight: Layout.touch.comfortable, backgroundColor: Colors.bg,
-  },
-  inputError: { borderColor: Colors.error, backgroundColor: Colors.errorLight },
-
-  chipRow: { flexDirection: 'row', gap: 8 },
-  chip: {
-    paddingHorizontal: 14, paddingVertical: 10, borderRadius: Layout.radius.pill,
-    borderWidth: 2, borderColor: '#E5E7EB', backgroundColor: Colors.bg,
-  },
-  chipActive: { borderColor: Colors.green, backgroundColor: Colors.greenLight },
-  chipText: { fontSize: 14, fontWeight: Font.weight.medium, color: Colors.textMuted },
-  chipTextActive: { color: Colors.green },
 
   sizeRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   sizeBtn: {

@@ -9,7 +9,6 @@ import type { AuthStackParams } from '../navigation/RootNavigator';
 import { Colors, Font, Space, Layout, Atoms } from '../../theme';
 import { useAppDispatch } from '../store/hooks';
 import { otpRequested } from '../store/slices/authSlice';
-import { authApi } from '../services/api/auth.api';
 
 type Nav = NativeStackNavigationProp<AuthStackParams>;
 
@@ -27,25 +26,15 @@ export default function PhoneEntryScreen() {
 
   const [country, setCountry] = useState(COUNTRY_CODES[0]);
   const [phone, setPhone] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const isValid = phone.replace(/\s/g, '').length >= 9;
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     const clean = phone.replace(/\s/g, '');
     if (!isValid) { setError('Enter a valid phone number'); return; }
-    setLoading(true);
-    setError('');
-    try {
-      await authApi.requestOtp({ phone: clean, countryCode: country.code });
-      dispatch(otpRequested(`+${country.code}${clean}`));
-      navigation.navigate('OTPVerify', { phone: clean, countryCode: country.code });
-    } catch (e: any) {
-      setError(e.response?.data?.message ?? 'Could not send code. Try again.');
-    } finally {
-      setLoading(false);
-    }
+    dispatch(otpRequested(`+${country.code}${clean}`));
+    navigation.navigate('OTPVerify', { phone: clean, countryCode: country.code });
   };
 
   const formatPhone = (raw: string) => {
@@ -134,14 +123,12 @@ export default function PhoneEntryScreen() {
 
         {/* CTA */}
         <TouchableOpacity
-          style={[styles.cta, (!isValid || loading) && styles.ctaDisabled]}
+          style={[styles.cta, !isValid && styles.ctaDisabled]}
           onPress={handleSubmit}
-          disabled={!isValid || loading}
+          disabled={!isValid}
           activeOpacity={0.85}
         >
-          <Text style={styles.ctaText}>
-            {loading ? 'Sending code...' : 'Send Verification Code →'}
-          </Text>
+          <Text style={styles.ctaText}>Send Verification Code →</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

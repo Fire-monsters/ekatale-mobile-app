@@ -130,8 +130,8 @@ export async function saveChatMessage(
   // Keep only last 100 messages
   await db.runAsync(
     `DELETE FROM ${DB_TABLES.CHAT_HISTORY} WHERE id NOT IN (
-       SELECT id FROM ${DB_TABLES.CHAT_HISTORY} ORDER BY ts DESC LIMIT 100
-     )`,
+        SELECT id FROM ${DB_TABLES.CHAT_HISTORY} ORDER BY ts DESC LIMIT 100
+    )`,
   );
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { Colors, Font, Space } from '../../theme';
+import { GS, Colors, Font, Space } from '@styles/global';
 
 type ChatMsg = { id: string; role: 'user' | 'ai'; text: string };
 
@@ -36,7 +36,7 @@ export function AIAdvisor() {
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: Colors.bg }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>AI Farm Advisor</Text>
+        <Text style={GS.headerTitleInverse}>AI Farm Advisor</Text>
         <Text style={styles.onlineText}>Online</Text>
       </View>
 
@@ -57,7 +57,7 @@ export function AIAdvisor() {
         {busy && <Text style={styles.typing}>...</Text>}
       </ScrollView>
 
-      <View style={styles.inputBar}>
+      <View style={GS.bottomBar}>
         <TextInput
           style={styles.input}
           value={input}
@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  headerTitle: { fontSize: Font.size.body, fontWeight: Font.weight.bold, color: Colors.textInverse },
   onlineText: { fontSize: Font.size.caption, color: 'rgba(255,255,255,0.8)' },
   quickBar: { backgroundColor: Colors.surface, borderBottomWidth: 0.5, borderBottomColor: Colors.border, maxHeight: 50 },
   quickBtn: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 16, borderWidth: 1.5, borderColor: '#CE93D8' },
@@ -97,15 +96,6 @@ const styles = StyleSheet.create({
   bubbleText: { fontSize: Font.size.body, color: Colors.textPrimary, lineHeight: 22 },
   userText: { color: Colors.textInverse },
   typing: { marginHorizontal: Space.md, color: Colors.textMuted },
-  inputBar: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 10,
-    padding: 12,
-    backgroundColor: Colors.surface,
-    borderTopWidth: 0.5,
-    borderTopColor: Colors.border,
-  },
   input: {
     flex: 1,
     fontSize: Font.size.body,

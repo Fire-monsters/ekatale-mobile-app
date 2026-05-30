@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
 import type { FarmerStackParams } from '../navigation/RootNavigator';
-import { Colors, Font, Space, Layout, getCropEmoji } from '../../theme';
+import { GS, Colors, Space, getCropEmoji } from '@styles/global';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchMyListings, selectAllListings } from '../store/slices/listingSlice';
 import { Button, EmptyState, StatusBadge } from '../components/common';
@@ -40,16 +40,16 @@ export function MyListings() {
 
   const renderItem = ({ item }: { item: ProduceListing }) => (
     <TouchableOpacity
-      style={styles.row}
+      style={GS.listRow}
       onPress={() => navigation.navigate('ListingDetail', { listingId: item.id })}
       activeOpacity={0.75}
     >
-      <View style={styles.icon}>
+      <View style={GS.iconCircleMd}>
         <Text style={{ fontSize: 24 }}>{getCropEmoji(item.commodityId)}</Text>
       </View>
       <View style={{ flex: 1, gap: 4 }}>
-        <Text style={styles.name}>{item.commodityName} - {item.quantity}{item.unit}</Text>
-        <Text style={styles.date}>{timeAgo(item.createdAt)}</Text>
+        <Text style={GS.listRowText}>{item.commodityName} - {item.quantity}{item.unit}</Text>
+        <Text style={GS.listRowSub}>{timeAgo(item.createdAt)}</Text>
       </View>
       <StatusBadge status={item.status} />
     </TouchableOpacity>
@@ -58,15 +58,15 @@ export function MyListings() {
   return (
     <View style={{ flex: 1, backgroundColor: Colors.bg }}>
       <View style={styles.header}>
-        <Text style={styles.title}>My Orders</Text>
-        <View style={styles.tabs}>
+        <Text style={[GS.pageTitle, { marginBottom: Space.sm }]}>My Orders</Text>
+        <View style={{ flexDirection: 'row' }}>
           {TABS.map((item) => (
             <TouchableOpacity
               key={item.key}
-              style={[styles.tab, tab === item.key && styles.tabActive]}
+              style={[GS.tab, tab === item.key && GS.tabActive]}
               onPress={() => setTab(item.key)}
             >
-              <Text style={[styles.tabText, tab === item.key && styles.tabTextActive]}>{item.label}</Text>
+              <Text style={[GS.tabText, tab === item.key && GS.tabTextActive]}>{item.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -102,30 +102,4 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: Colors.border,
   },
-  title: { fontSize: Font.size.title, fontWeight: Font.weight.bold, color: Colors.textPrimary, marginBottom: Space.sm },
-  tabs: { flexDirection: 'row' },
-  tab: { flex: 1, paddingVertical: 12, alignItems: 'center', borderBottomWidth: 3, borderBottomColor: 'transparent' },
-  tabActive: { borderBottomColor: Colors.green },
-  tabText: { fontSize: Font.size.label, fontWeight: Font.weight.medium, color: Colors.textMuted },
-  tabTextActive: { color: Colors.green, fontWeight: Font.weight.bold },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    backgroundColor: Colors.surface,
-    borderRadius: Layout.radius.md,
-    padding: 14,
-    borderWidth: 0.5,
-    borderColor: Colors.border,
-  },
-  icon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: Colors.greenLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  name: { fontSize: Font.size.label, fontWeight: Font.weight.semiBold, color: Colors.textPrimary },
-  date: { fontSize: Font.size.caption, color: Colors.textMuted },
 });

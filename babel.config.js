@@ -18,6 +18,7 @@ module.exports = {
           '@theme': './theme',
           '@utils': './src/utils',
           '@ekatale/types': './src/types/index.ts',
+          '@styles': './src/styles',
         },
       },
     ],

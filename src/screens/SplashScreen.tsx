@@ -65,7 +65,7 @@ export default function SplashScreen() {
 
         {/* Farm illustration */}
         <View style={styles.illustration}>
-          <Text style={styles.farmRow}>🌽   🫘   🥔   🍌   🥬</Text>
+          {/* <Text style={styles.farmRow}>🌽   🫘   🥔   🍌   🥬</Text> */}
           <Text style={styles.farmCaption}>Farm smarter · Earn more · Track everything</Text>
         </View>
       </View>

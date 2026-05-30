@@ -1,33 +1,37 @@
 import React from 'react';
-import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StyleSheet } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { store } from '../src/store';
+import { RootNavigator } from '../src/navigation/RootNavigator';
+import { configureNotifications } from '../src/utils/permissions';
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-  return (
-    <View style={[styles.container, { paddingTop: safeAreaInsets.top }]}>
-      <Text style={styles.text}>Welcome to Ekatale Logistics</Text>
-    </View>
-  );
-}
+// Configure push notification handler at startup
+configureNotifications();
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      staleTime: 5 * 60_000,
+      gcTime: 30 * 60_000,
+    },
+  },
+});
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-  const appContent = (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
+  return (
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <SafeAreaProvider>
+          <RootNavigator />
+        </SafeAreaProvider>
+      </QueryClientProvider>
+    </Provider>
   );
-
-  return <Provider store={store} children={appContent} />;
 }
 
-const styles = StyleSheet.create({ 
-  container: { flex: 1 }, 
-  text: { fontSize: 18, 
-    fontWeight: 'bold' } 
-});
+const styles = StyleSheet.create({});
+
 export default App;

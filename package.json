@@ -2,6 +2,7 @@
   "name": "ekatale_app",
   "version": "0.0.1",
   "private": true,
+  "main": "core/index.js",
   "scripts": {
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -24,9 +25,10 @@
     "expo-location": "^56.0.14",
     "expo-notifications": "^56.0.14",
     "expo-sqlite": "^56.0.4",
+    "lucide-react-native": "^1.17.0",
     "react": "19.2.3",
     "react-native": "0.85.3",
-    "react-native-safe-area-context": "^5.5.2",
+    "react-native-safe-area-context": "~5.7.0",
     "react-native-svg-transformer": "^1.5.3",
     "react-redux": "^9.3.0"
   },

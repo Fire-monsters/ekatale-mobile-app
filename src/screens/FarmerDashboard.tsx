@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
 import type { FarmerStackParams } from '../navigation/RootNavigator';
-import { Colors, Font, Space, Layout, getCropEmoji } from '../../theme';
+import { GS, Colors, Font, Space, Layout, getCropEmoji } from '@styles/global';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { selectUserProfile } from '../store/slices/userSlice';
 import { selectActiveListings, fetchMyListings } from '../store/slices/listingSlice';
@@ -44,7 +44,7 @@ export default function FarmerDashboard() {
   const pendingCount = listings.filter(l => l.status === 'ORDER_CONFIRMED').length;
 
   return (
-    <View style={s.root}>
+    <View style={GS.screen}>
       {/* Fixed green header */}
       <View style={s.header}>
         <View style={s.headerRow}>
@@ -65,8 +65,8 @@ export default function FarmerDashboard() {
             >
               <Text style={{ fontSize: 22, color: '#fff' }}>🔔</Text>
               {unreadCount > 0 && (
-                <View style={s.notifBadge}>
-                  <Text style={s.notifBadgeText}>{unreadCount > 9 ? '9+' : unreadCount}</Text>
+                <View style={[GS.badge, { borderColor: Colors.green }]}>
+                  <Text style={GS.badgeText}>{unreadCount > 9 ? '9+' : unreadCount}</Text>
                 </View>
               )}
             </TouchableOpacity>
@@ -113,7 +113,7 @@ export default function FarmerDashboard() {
         </View>
 
         {/* Quick actions */}
-        <Text style={s.sectionTitle}>What do you need?</Text>
+        <Text style={GS.sectionTitle}>What do you need?</Text>
         <View style={s.actionsGrid}>
           <ActionCard
             emoji="🌽" label="List Produce" sublabel="Register your harvest"
@@ -140,10 +140,10 @@ export default function FarmerDashboard() {
         {/* Active listings */}
         {listings.length > 0 && (
           <>
-            <View style={s.sectionHeader}>
-              <Text style={s.sectionTitle}>Active Listings</Text>
+            <View style={GS.sectionHeader}>
+              <Text style={GS.sectionTitle}>Active Listings</Text>
               <TouchableOpacity onPress={() => navigation.navigate('MyListings')}>
-                <Text style={s.seeAll}>See all →</Text>
+                <Text style={GS.seeAll}>See all →</Text>
               </TouchableOpacity>
             </View>
             {listings.slice(0, 3).map(l => (
@@ -158,10 +158,10 @@ export default function FarmerDashboard() {
 
         {/* Empty state */}
         {listings.length === 0 && !isLoading && (
-          <View style={s.empty}>
-            <Text style={s.emptyEmoji}>🌱</Text>
-            <Text style={s.emptyTitle}>No listings yet</Text>
-            <Text style={s.emptyText}>
+          <View style={GS.emptyState}>
+            <Text style={GS.emptyEmoji}>🌱</Text>
+            <Text style={GS.emptyTitle}>No listings yet</Text>
+            <Text style={GS.emptyText}>
               List your produce to start receiving offers from the warehouse
             </Text>
             <TouchableOpacity
@@ -221,13 +221,13 @@ function ActionCard({
 
 function ListingRow({ listing, onPress }: { listing: ProduceListing; onPress: () => void }) {
   return (
-    <TouchableOpacity style={s.listingRow} onPress={onPress} activeOpacity={0.75}>
-      <View style={s.listingIcon}>
+    <TouchableOpacity style={GS.listRow} onPress={onPress} activeOpacity={0.75}>
+      <View style={GS.iconCircleMd}>
         <Text style={{ fontSize: 22 }}>{getCropEmoji(listing.commodityId)}</Text>
       </View>
       <View style={{ flex: 1, gap: 3 }}>
-        <Text style={s.listingName}>{listing.commodityName} — {listing.quantity}{listing.unit}</Text>
-        <Text style={s.listingDate}>{timeAgo(listing.createdAt)}</Text>
+        <Text style={GS.listRowText}>{listing.commodityName} — {listing.quantity}{listing.unit}</Text>
+        <Text style={GS.listRowSub}>{timeAgo(listing.createdAt)}</Text>
       </View>
       <StatusBadge status={listing.status} />
     </TouchableOpacity>
@@ -235,20 +235,12 @@ function ListingRow({ listing, onPress }: { listing: ProduceListing; onPress: ()
 }
 
 const s = StyleSheet.create({
-  root: { flex: 1, backgroundColor: Colors.bg },
-
   // Header
   header: { backgroundColor: Colors.green, padding: Space.md, paddingTop: Space.sm, gap: 12 },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   menuIcon: { fontSize: 22, color: Colors.textInverse },
   headerTitle: { fontSize: 16, fontWeight: Font.weight.bold, color: Colors.textInverse },
   bellWrap: { position: 'relative' },
-  notifBadge: {
-    position: 'absolute', top: -5, right: -5,
-    backgroundColor: Colors.gold, borderRadius: 8, minWidth: 16, height: 16,
-    alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, borderColor: Colors.green,
-  },
-  notifBadgeText: { fontSize: 9, color: Colors.textPrimary, fontWeight: Font.weight.bold },
   greeting: { fontSize: Font.size.body, fontWeight: Font.weight.semiBold, color: Colors.textInverse },
   weatherStrip: {
     backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: Layout.radius.md,
@@ -274,9 +266,6 @@ const s = StyleSheet.create({
   statLbl: { fontSize: Font.size.caption, color: Colors.textMuted, marginTop: 2, textAlign: 'center' },
 
   // Actions
-  sectionTitle: { fontSize: Font.size.body, fontWeight: Font.weight.bold, color: Colors.textSecondary },
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  seeAll: { fontSize: Font.size.label, color: Colors.green, fontWeight: Font.weight.medium },
   actionsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   actionCard: {
     width: '47%', borderRadius: Layout.radius.lg, padding: 16,
@@ -287,24 +276,7 @@ const s = StyleSheet.create({
   actionLabel: { fontSize: 14, fontWeight: Font.weight.bold, textAlign: 'center' },
   actionSub: { fontSize: Font.size.caption, color: Colors.textMuted, textAlign: 'center' },
 
-  // Listings
-  listingRow: {
-    flexDirection: 'row', alignItems: 'center', gap: 12,
-    backgroundColor: Colors.surface, borderRadius: Layout.radius.md, padding: 14,
-    borderWidth: 0.5, borderColor: Colors.border,
-  },
-  listingIcon: {
-    width: 48, height: 48, borderRadius: 12, backgroundColor: Colors.greenLight,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  listingName: { fontSize: Font.size.label, fontWeight: Font.weight.semiBold, color: Colors.textPrimary },
-  listingDate: { fontSize: Font.size.caption, color: Colors.textMuted },
-
-  // Empty state
-  empty: { alignItems: 'center', paddingVertical: 32, gap: 10 },
-  emptyEmoji: { fontSize: 56 },
-  emptyTitle: { fontSize: Font.size.title, fontWeight: Font.weight.bold, color: Colors.textSecondary },
-  emptyText: { fontSize: Font.size.body, color: Colors.textMuted, textAlign: 'center', lineHeight: 24, paddingHorizontal: 16 },
+  // Empty state CTA button (text + container handled by GS.emptyState/emptyTitle/emptyText)
   emptyBtn: {
     backgroundColor: Colors.green, borderRadius: Layout.radius.md,
     paddingVertical: 14, paddingHorizontal: 28, marginTop: 8,

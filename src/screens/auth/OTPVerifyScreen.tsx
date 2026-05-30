@@ -1,18 +1,13 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   View, Text, StyleSheet, TextInput, TouchableOpacity,
-  Keyboard, KeyboardAvoidingView, Platform, Alert,
+  Keyboard, KeyboardAvoidingView, Platform,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { AuthStackParams } from '../../navigation/RootNavigator';
-import { Colors, Font, Space, Layout, Atoms } from '../../../theme';
-import { useAppDispatch } from '../../store/hooks';
-import { loginSuccess, persistTokens } from '../../store/slices/authSlice';
-import { fetchUserProfile, fetchFarmerProfile } from '../../store/slices/userSlice';
-import { authApi } from '../../services/api/auth.api';
-import { UserRole } from '../../types';
+import { GS, Colors, Font, Space, Layout, Atoms } from '@styles/global';
 
 type Nav = NativeStackNavigationProp<AuthStackParams>;
 type Route = RouteProp<AuthStackParams, 'OTPVerify'>;
@@ -23,7 +18,6 @@ const RESEND_SECONDS = 60;
 export default function OTPVerifyScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<Route>();
-  const dispatch = useAppDispatch();
   const { phone, countryCode } = route.params;
 
   const [digits, setDigits] = useState<string[]>(Array(N).fill(''));
@@ -66,47 +60,25 @@ export default function OTPVerifyScreen() {
     }
   };
 
-  const handleVerify = useCallback(async () => {
+  const handleVerify = useCallback(() => {
     const code = digits.join('');
     if (code.length < N) { setError('Enter all 6 digits'); return; }
-    setLoading(true);
-    setError('');
     Keyboard.dismiss();
-    try {
-      const result = await authApi.verifyOtp({ phone, countryCode, otp: code });
-      await dispatch(persistTokens(result.tokens));
-      dispatch(loginSuccess({ user: result.user, tokens: result.tokens }));
-      if (result.isNewUser) {
-        navigation.navigate('FarmerRegister', { phone });
-        return;
-      }
-      await dispatch(fetchUserProfile());
-      if (result.user.role === UserRole.FARMER) await dispatch(fetchFarmerProfile());
-    } catch {
-      setError('Wrong code — please try again');
-      setDigits(Array(N).fill(''));
-      refs.current[0]?.focus();
-    } finally {
-      setLoading(false);
-    }
-  }, [digits, phone, countryCode, dispatch, navigation]);
+    // Static flow: treat every login as a new user going to profile setup.
+    navigation.navigate('FarmerRegister', { phone });
+  }, [digits, phone, navigation]);
 
   // Auto-submit when all digits entered
   useEffect(() => {
     if (digits.every(d => d) && !loading) handleVerify();
   }, [digits, handleVerify, loading]);
 
-  const handleResend = async () => {
+  const handleResend = () => {
     if (cooldown > 0) return;
-    try {
-      await authApi.requestOtp({ phone, countryCode });
-      setCooldown(RESEND_SECONDS);
-      setDigits(Array(N).fill(''));
-      setError('');
-      refs.current[0]?.focus();
-    } catch {
-      Alert.alert('Error', 'Could not resend. Please try again.');
-    }
+    setCooldown(RESEND_SECONDS);
+    setDigits(Array(N).fill(''));
+    setError('');
+    refs.current[0]?.focus();
   };
 
   const maskedPhone = `+${countryCode} ${phone.slice(0, 3)}*** ${phone.slice(-3)}`;
@@ -118,22 +90,22 @@ export default function OTPVerifyScreen() {
     >
       <View style={styles.container}>
         <TouchableOpacity
-          style={styles.back}
+          style={GS.back}
           onPress={() => navigation.goBack()}
           hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         >
-          <Text style={styles.backText}>← Edit number</Text>
+          <Text style={GS.backText}>← Edit number</Text>
         </TouchableOpacity>
 
         <View style={styles.content}>
-          <View style={styles.iconCircle}>
+          <View style={GS.iconCircle}>
             <Text style={styles.icon}>💬</Text>
           </View>
 
-          <Text style={styles.title}>Check your messages</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[GS.screenTitle, { textAlign: 'center' }]}>Check your messages</Text>
+          <Text style={GS.subtitle}>
             We sent a 6-digit code to{'\n'}
-            <Text style={styles.phoneHighlight}>{maskedPhone}</Text>
+            <Text style={GS.greenText}>{maskedPhone}</Text>
           </Text>
 
           {/* OTP boxes */}
@@ -206,46 +178,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: Layout.safePadding,
     paddingTop: Space.sm,
   },
-  back: {
-    paddingVertical: Space.sm,
-    alignSelf: 'flex-start',
-  },
-  backText: {
-    fontSize: Font.size.body,
-    color: Colors.green,
-    fontWeight: Font.weight.medium,
-  },
   content: {
     flex: 1,
     alignItems: 'center',
     paddingTop: Space.xl,
     gap: Space.md,
   },
-  iconCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: Colors.greenLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   icon: { fontSize: 40 },
-  title: {
-    fontSize: Font.size.heading,
-    fontWeight: Font.weight.bold,
-    color: Colors.textPrimary,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: Font.size.body,
-    color: Colors.textMuted,
-    textAlign: 'center',
-    lineHeight: Font.size.body * 1.6,
-  },
-  phoneHighlight: {
-    color: Colors.green,
-    fontWeight: Font.weight.bold,
-  },
   boxRow: {
     flexDirection: 'row',
     gap: 10,
